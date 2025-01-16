@@ -137,7 +137,7 @@ try {
           <div class="card rounded-4 shadow-sm h-600px">
             <div class="card-header">
               <div class="card-title">
-                <h3>รายการเข้าร่วม</h3>
+                <h3>ผู้โชคดี</h3>
               </div>
             </div>
             <div class="card-body d-flex flex-column align-items-center justify-content-center">
