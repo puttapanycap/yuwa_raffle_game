@@ -1,0 +1,59 @@
+/* Line Seed Sans TH Thin (Hairline) */
+@font-face {
+    font-family: 'LINESeedSansTH';
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Th.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Th.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/LINESeedSansTH/WOFF/LINESeedSansTH_W_Th.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/LINESeedSansTH/WOFF2/LINESeedSansTH_W_Th.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/LINESeedSansTH/TTF/LINESeedSansTH_A_Th.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: 100;
+    font-style: normal;
+}
+
+/* Line Seed Sans TH Normal */
+@font-face {
+    font-family: 'LINESeedSansTH';
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Rg.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Rg.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/LINESeedSansTH/WOFF/LINESeedSansTH_W_Rg.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/LINESeedSansTH/WOFF2/LINESeedSansTH_W_Rg.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/LINESeedSansTH/TTF/LINESeedSansTH_A_Rg.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Line Seed Sans TH Bold */
+@font-face {
+    font-family: 'LINESeedSansTH';
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Bd.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_Bd.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/LINESeedSansTH/WOFF/LINESeedSansTH_W_Bd.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/LINESeedSansTH/WOFF2/LINESeedSansTH_W_Bd.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/LINESeedSansTH/TTF/LINESeedSansTH_A_Bd.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Line Seed Sans TH Extra Bold (Ultra Bold) */
+@font-face {
+    font-family: 'LINESeedSansTH';
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_XBd.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_XBd.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/LINESeedSansTH/WOFF/LINESeedSansTH_W_XBd.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/LINESeedSansTH/WOFF2/LINESeedSansTH_W_XBd.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/LINESeedSansTH/TTF/LINESeedSansTH_A_XBd.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: 800;
+    font-style: normal;
+}
+
+/* Line Seed Sans TH Extra Black (Heavy) */
+@font-face {
+    font-family: 'LINESeedSansTH';
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_He.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/LINESeedSansTH/EOT/LINESeedSansTH_W_He.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('../fonts/LINESeedSansTH/WOFF/LINESeedSansTH_W_He.woff') format('woff'), /* Pretty Modern Browsers */
+         url('../fonts/LINESeedSansTH/WOFF2/LINESeedSansTH_W_He.woff2') format('woff2'), /* Super Modern Browsers */
+         url('../fonts/LINESeedSansTH/TTF/LINESeedSansTH_A_He.ttf')  format('truetype'); /* Safari, Android, iOS */
+    font-weight: 900;
+    font-style: normal;
+}
