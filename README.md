@@ -1,5 +1,10 @@
 # yuwa_raffle_game
 
+run command
+```bash
+$ composer install
+```
+
 # Files Create
 ### Configs
 create file `.env`
