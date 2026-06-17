@@ -2,12 +2,15 @@
 /**
  * Get Settings API
  * Returns all settings for a raffle session
+ *
+ * Performance: file cache (30s) + ETag.
  */
 header('Content-Type: application/json');
 
 define("_WEBROOT_PATH_", "../");
 require_once _WEBROOT_PATH_ . 'helpers/load_env.php';
 require_once _WEBROOT_PATH_ . 'helpers/load_connection.php';
+require_once _WEBROOT_PATH_ . 'helpers/cache.php';
 
 // Default settings
 $defaultSettings = [
@@ -37,16 +40,30 @@ try {
     }
 
     $raffle_key = $_GET['raffle_key'];
+    $cacheKey = 'settings:' . $raffle_key;
+
+    // === ETag short-circuit ===
+    $cached = raffle_cache_get($cacheKey);
+    if ($cached && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === '"' . $cached['hash'] . '"') {
+        http_response_code(304);
+        header('ETag: "' . $cached['hash'] . '"');
+        exit;
+    }
+    if ($cached) {
+        header('ETag: "' . $cached['hash'] . '"');
+        echo $cached['payload'];
+        exit;
+    }
 
     // Validate raffle key
-    $stmt = $pdo->prepare("SELECT * FROM raffle_keys WHERE raffle_key = :raffle_key");
+    $stmt = $pdo->prepare("SELECT event_title, is_locked FROM raffle_keys WHERE raffle_key = :raffle_key");
     $stmt->execute(['raffle_key' => $raffle_key]);
-    if ($stmt->rowCount() === 0) {
+    $raffleInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$raffleInfo) {
         http_response_code(404);
         echo json_encode(['error' => 'Invalid raffle key.']);
         exit;
     }
-    $raffleInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Get all settings
     $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM raffle_settings WHERE raffle_key = :raffle_key");
@@ -56,7 +73,7 @@ try {
     // Merge with defaults
     $settings = $defaultSettings;
     $settings['event_title'] = $raffleInfo['event_title'] ?? $defaultSettings['event_title'];
-    
+
     foreach ($settingsRows as $row) {
         $settings[$row['setting_key']] = $row['setting_value'];
     }
@@ -86,13 +103,19 @@ try {
         $customSounds[$sound['sound_type']] = $sound;
     }
 
-    echo json_encode([
+    $payload = json_encode([
         'success' => true,
         'settings' => $settings,
         'prize_categories' => $prizeCategories,
         'custom_sounds' => $customSounds,
         'is_locked' => (bool)$raffleInfo['is_locked']
     ]);
+
+    $hash = substr(md5($payload), 0, 16);
+    header('ETag: "' . $hash . '"');
+    raffle_cache_set($cacheKey, ['hash' => $hash, 'payload' => $payload], 30);
+
+    echo $payload;
 
 } catch (PDOException $e) {
     http_response_code(500);

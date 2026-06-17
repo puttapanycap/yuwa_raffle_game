@@ -8,6 +8,7 @@ header('Content-Type: application/json');
 define("_WEBROOT_PATH_", "../");
 require_once _WEBROOT_PATH_ . 'helpers/load_env.php';
 require_once _WEBROOT_PATH_ . 'helpers/load_connection.php';
+require_once _WEBROOT_PATH_ . 'helpers/cache.php';
 
 try {
     if (!isset($_POST['raffle_key'])) {
@@ -116,6 +117,10 @@ try {
         'message' => 'Settings saved successfully.',
         'saved_keys' => $savedKeys
     ]);
+
+    // Invalidate caches so the new settings take effect immediately
+    raffle_cache_delete('settings:' . $raffle_key);
+    raffle_cache_delete('state:' . $raffle_key);
 
 } catch (PDOException $e) {
     http_response_code(500);
