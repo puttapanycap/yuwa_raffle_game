@@ -1,215 +1,276 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เกมจับฉลาก</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    #nameList {
-      height: 555px;
-      border: 1px solid #ddd;
-      padding: 5px;
-      background: #f9f9f9;
-      overflow-y: auto;
-    }
-
-    #nameList .duplicate {
-      background-color: red;
-      color: white;
-    }
-
-    .winner {
-      font-size: 32px;
-      font-weight: bold;
-      text-align: center;
-    }
-
-    .hide {
-      display: none;
-    }
-
-    .names {
-      font-size: 24px;
-      text-align: center;
-    }
-
-    .btn-3d {
-      font-size: 24px;
-      font-weight: bold;
-      color: white;
-      background: linear-gradient(145deg, #00b4d8, #0077b6);
-      border: none;
-      border-radius: 10px;
-      padding: 10px 20px;
-      box-shadow: 0 5px #005f73;
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-
-    .btn-3d:active {
-      transform: translateY(5px);
-      box-shadow: 0 1px #005f73;
-    }
-
-    #log {
-      height: 555px;
-      border: 1px solid #ddd;
-      padding: 5px;
-      background: #eef7eb;
-      overflow-y: auto;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>โหมดออฟไลน์ | Yuwa Raffle</title>
+  <meta name="description" content="สุ่มรายชื่อได้โดยไม่ต้องใช้อินเทอร์เน็ต ข้อมูลเก็บไว้ในเครื่องนี้" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <meta name="theme-color" content="#2B1166" />
+  <link rel="icon" type="image/svg+xml" href="../assets/medias/icons/icon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/medias/icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Mitr:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="../assets/css/fonts.css" />
+  <link rel="stylesheet" href="../assets/css/fa_pro_67.css" />
+  <link rel="stylesheet" href="../css/cartoon-game.css" />
 </head>
-<body>
-  <div class="row">
-    <div class="col-md-3">
-      <div class="card">
-        <div class="card-header">
-          <h3>รายชื่อผู้เข้าร่วม</h3>
-        </div>
-        <div class="card-body">
-          <div id="nameList" contenteditable="true"></div>
-        </div>
-        <div class="card-footer text-center">
-          <button class="btn btn-primary" onclick="checkDuplicates()">ตรวจสอบรายชื่อซ้ำ</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card h-100">
-        <div class="card-header">
-          <h3>เกมจับฉลาก</h3>
-        </div>
-        <div class="card-body d-flex flex-column align-items-center justify-content-center">
-          <div class="d-flex flex-column flex-center gap-3">
-            <div class="d-flex flex-column flex-center gap-3">
-              <label for="speed" class="form-label">ตั้งค่าความเร็วการสุ่ม (มิลลิวินาที):</label>
-              <input id="speed" type="number" class="form-control mb-3" placeholder="ใส่ค่าความเร็ว" min="1" value="10">
-            </div>
-            <div class="d-flex flex-column flex-column-fluid flex-center gap-3">
-              <div class="names hide"></div>
-              <div class="winner hide"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer text-center">
-          <button class="btn-3d" onclick="rollClick()">สุ่ม</button>
-          <button class="btn-3d hide mt-2" onclick="rollClick()">สุ่มอีกครั้ง</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="card">
-        <div class="card-header">
-          <h3>บันทึกผล</h3>
-        </div>
-        <div class="card-body">
-          <div id="log"></div>
-        </div>
-      </div>
-    </div>
+<body class="raffle-app" data-theme="dark" data-game-state="idle">
+  <div class="game-bg" aria-hidden="true">
+    <span class="bg-toy is-star" style="--size:54px;--fill:#FFC93C;left:6%;top:18%;--dur:8s"></span>
+    <span class="bg-toy is-coin" style="--size:38px;--fill:#2ED69A;left:88%;top:14%;--dur:10s;--delay:-3s"></span>
+    <span class="bg-toy is-gem" style="--size:30px;--fill:#FF5DA2;left:78%;top:78%;--dur:9s;--delay:-5s"></span>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <header class="hud">
+    <div class="hud-brand">
+      <a href="../start.html" class="btn-raffle-ghost btn-icon" aria-label="กลับหน้าแรก" title="หน้าแรก">
+        <i class="fa-solid fa-house" aria-hidden="true"></i>
+      </a>
+      <h1 class="hud-title"><i class="fa-solid fa-cloud-slash" aria-hidden="true"></i>จับฉลาก โหมดออฟไลน์</h1>
+    </div>
+    <div class="hud-actions">
+      <span class="hud-chip" title="จำนวนรายชื่อ">
+        <span class="hud-chip-icon" aria-hidden="true"><i class="fa-solid fa-users"></i></span>
+        <span id="countChip">0</span><span class="hud-chip-label">รายชื่อ</span>
+      </span>
+      <button type="button" class="btn-raffle-ghost btn-icon" id="themeBtn" aria-label="สลับธีมกลางวัน/กลางคืน" title="สลับธีม">
+        <i class="fa-solid fa-sun" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-layout offline-layout">
+    <!-- Names -->
+    <aside class="side-panel" aria-labelledby="hNames">
+      <section class="game-panel">
+        <header class="panel-head is-sky">
+          <h2 id="hNames"><span class="panel-head-icon" aria-hidden="true"><i class="fa-solid fa-users"></i></span>รายชื่อ</h2>
+          <span class="count-badge" id="countBadge">0</span>
+        </header>
+        <div class="panel-body d-flex" style="flex-direction:column; gap:12px;">
+          <label class="sr-only" for="nameInput">รายชื่อผู้เข้าร่วม บรรทัดละ 1 ชื่อ</label>
+          <textarea id="nameInput" class="form-control-raffle name-input" placeholder="พิมพ์หรือวางรายชื่อ&#10;บรรทัดละ 1 ชื่อ" spellcheck="false"></textarea>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn-raffle-ghost btn-sm" id="dupBtn"><i class="fa-solid fa-list-check" aria-hidden="true"></i>ตรวจชื่อซ้ำ</button>
+            <button type="button" class="btn-raffle-ghost btn-sm" id="dedupeBtn" hidden><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>ลบชื่อซ้ำ</button>
+          </div>
+          <div id="dupResult" aria-live="polite"></div>
+          <p class="small text-muted mb-0">ข้อมูลเก็บไว้ในเครื่องนี้เท่านั้น ไม่ส่งขึ้นเซิร์ฟเวอร์</p>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Stage -->
+    <section class="center-panel" aria-label="เวทีสุ่ม">
+      <div class="stage">
+        <div class="stage-lights" aria-hidden="true"></div>
+        <div class="stage-screen">
+          <div class="screen-idle" aria-hidden="true">
+            <i class="fa-solid fa-gift"></i>
+            <span>ใส่รายชื่อแล้วกดสุ่มเลย!</span>
+          </div>
+          <div class="text-roll-container hide" id="rollBox">
+            <div class="text-roll-item active" id="rollText"></div>
+          </div>
+          <div class="result-display" id="resultBox" style="display:none;" aria-live="polite"></div>
+        </div>
+
+        <div class="speed-row">
+          <label for="speed">ความเร็วการสุ่ม</label>
+          <select id="speed" class="filter-select" style="width:auto; min-width:160px;">
+            <option value="6">เร็วมาก</option>
+            <option value="10" selected>ปกติ</option>
+            <option value="18">ลุ้นนาน</option>
+            <option value="28">ลุ้นนานมาก</option>
+          </select>
+          <label class="d-flex align-items-center gap-2" for="removeWinner">
+            <input type="checkbox" id="removeWinner" checked style="width:22px;height:22px;accent-color:#FFC93C;"> นำผู้โชคดีออกจากรายชื่อ
+          </label>
+        </div>
+
+        <div class="btn-container">
+          <button type="button" class="btn-spin-mega" id="spinBtn" aria-label="สุ่มรายชื่อ">
+            <i class="fa-solid fa-dice" aria-hidden="true"></i>
+            <div class="mt-2" id="spinLabel">สุ่ม</div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Log -->
+    <aside class="side-panel" aria-labelledby="hLog">
+      <section class="game-panel">
+        <header class="panel-head is-sun">
+          <h2 id="hLog"><span class="panel-head-icon" aria-hidden="true"><i class="fa-solid fa-trophy"></i></span>ผู้โชคดี</h2>
+          <span class="count-badge" id="logCount">0</span>
+        </header>
+        <div class="panel-body winners-stack" id="logList" style="overflow-y:auto; max-height:60dvh;"></div>
+        <div class="panel-body" style="padding-top:0;">
+          <button type="button" class="btn-raffle-danger btn-sm" id="clearLogBtn"><i class="fa-solid fa-trash-can" aria-hidden="true"></i>ล้างประวัติ</button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+  <footer class="game-footer"><span>Create By Yuwa IT</span></footer>
+
+  <script src="../js/confetti.js"></script>
+  <script src="../js/game-dialog.js"></script>
+  <script src="../js/pwa.js"></script>
   <script>
-    const rollEl = document.querySelector(".btn-3d:not(.hide)");
-    const rollAgainEl = document.querySelector(".btn-3d.hide");
-    const namesEl = document.querySelector(".names");
-    const winnerEl = document.querySelector(".winner");
-    const entriesEl = document.getElementById("nameList");
-    const logEl = document.getElementById("log");
+  (function () {
+    'use strict';
+    var STORE = 'yuwaRaffle.offline';
+    var $ = function (id) { return document.getElementById(id); };
+    var input = $('nameInput'), rollBox = $('rollBox'), rollText = $('rollText'),
+        resultBox = $('resultBox'), spinBtn = $('spinBtn'), spinLabel = $('spinLabel'),
+        logList = $('logList');
+    var state = { log: [], theme: 'dark' };
+    var spinning = false;
 
-    function randomName() {
-      const ENTRIES = entriesEl.innerText.split("\n").map((i) => i.trim()).filter((i) => i);
-      const rand = Math.floor(Math.random() * ENTRIES.length);
-      const name = ENTRIES[rand];
-      namesEl.innerText = name;
+    function load() {
+      try {
+        var s = JSON.parse(localStorage.getItem(STORE) || '{}');
+        input.value = s.names || '';
+        state.log = Array.isArray(s.log) ? s.log : [];
+        state.theme = s.theme === 'light' ? 'light' : 'dark';
+      } catch (_) {}
     }
-
-    function rollClick() {
-      const ENTRIES = entriesEl.innerText.split("\n").map((i) => i.trim()).filter((i) => i);
-      if (ENTRIES.length === 0) {
-        alert("ไม่มีรายชื่อผู้เข้าร่วม กรุณาเพิ่มรายชื่อก่อนกดสุ่ม");
+    function save() {
+      try { localStorage.setItem(STORE, JSON.stringify({ names: input.value, log: state.log, theme: state.theme })); } catch (_) {}
+    }
+    function names() {
+      return input.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    }
+    function updateCounts() {
+      var n = names().length;
+      $('countChip').textContent = n;
+      $('countBadge').textContent = n;
+    }
+    function applyTheme() {
+      document.body.setAttribute('data-theme', state.theme);
+      $('themeBtn').innerHTML = '<i class="fa-solid ' + (state.theme === 'light' ? 'fa-moon' : 'fa-sun') + '" aria-hidden="true"></i>';
+    }
+    function renderLog() {
+      logList.replaceChildren();
+      $('logCount').textContent = state.log.length;
+      if (!state.log.length) {
+        var e = document.createElement('div');
+        e.className = 'text-center text-muted py-4';
+        e.textContent = 'ยังไม่มีผู้โชคดี';
+        logList.appendChild(e);
         return;
       }
-
-      const speedInput = document.getElementById("speed").value;
-      const speed = parseInt(speedInput, 10) || 10;
-      const iterations = 30;
-      const totalDelay = speed * iterations;
-
-      rollEl.classList.add("hide");
-      rollAgainEl.classList.add("hide");
-      winnerEl.classList.add("hide");
-      namesEl.classList.remove("hide");
-
-      setDeceleratingTimeout(randomName, speed, iterations);
-
-      setTimeout(() => {
-        namesEl.classList.add("hide");
-        winnerEl.classList.remove("hide");
-        rollAgainEl.classList.remove("hide");
-
-        const winner = namesEl.innerText;
-        const timestamp = new Date().toLocaleTimeString();
-        winnerEl.innerHTML = `<span>ผู้ชนะคือ...</span><br>${winner}`;
-
-        // ลบผู้ชนะออกจากรายชื่อ
-        const updatedEntries = ENTRIES.filter((i) => i !== winner);
-        entriesEl.innerHTML = updatedEntries.map((name) => `<div>${name}</div>`).join("");
-
-        // บันทึกผลผู้ชนะ
-        const logEntry = document.createElement("div");
-        logEntry.textContent = `(${timestamp}): ${winner}`;
-        logEl.appendChild(logEntry);
-        logEl.scrollTop = logEl.scrollHeight; // เลื่อนลงล่างสุด
-      }, totalDelay);
+      for (var i = state.log.length - 1; i >= 0; i--) {
+        var w = state.log[i];
+        var row = document.createElement('div'); row.className = 'winner-log';
+        var num = document.createElement('div'); num.className = 'number'; num.textContent = i + 1;
+        var nm = document.createElement('div'); nm.className = 'name'; nm.textContent = w.name;
+        var t = document.createElement('div'); t.className = 'text-muted'; t.style.fontSize = '0.75rem';
+        t.textContent = new Date(w.at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        nm.appendChild(t);
+        row.append(num, nm);
+        logList.appendChild(row);
+      }
     }
 
-    function setDeceleratingTimeout(callback, factor, times) {
-      const internalCallback = ((t, counter) => {
-        return () => {
-          if (--t > 0) {
-            setTimeout(internalCallback, ++counter * factor);
-            callback();
-          }
-        };
-      })(times, 0);
+    function setState(s) { document.body.dataset.gameState = s; }
 
-      setTimeout(internalCallback, factor);
-    }
+    function spin() {
+      if (spinning) return;
+      var list = names();
+      if (!list.length) {
+        Swal.fire('ยังไม่มีรายชื่อ', 'กรุณาเพิ่มรายชื่อก่อนกดสุ่ม', 'warning');
+        input.focus();
+        return;
+      }
+      spinning = true;
+      spinBtn.disabled = true;
+      spinBtn.classList.add('spinning');
+      spinLabel.textContent = 'กำลังสุ่ม...';
+      resultBox.style.display = 'none';
+      rollBox.classList.remove('hide');
+      setState('spinning');
 
-    function checkDuplicates() {
-      const names = entriesEl.innerText.split("\n").map((i) => i.trim()).filter((i) => i);
-      const nameSet = new Set();
-      const duplicates = new Set();
+      var winner = list[(crypto.getRandomValues(new Uint32Array(1))[0]) % list.length];
+      var factor = parseInt($('speed').value, 10) || 10;
+      var steps = 30, step = 0;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) steps = 1;
 
-      names.forEach(name => {
-        if (nameSet.has(name)) {
-          duplicates.add(name);
+      (function tick() {
+        step++;
+        if (step < steps) {
+          rollText.textContent = list[Math.floor(Math.random() * list.length)];
+          setTimeout(tick, step * factor);
         } else {
-          nameSet.add(name);
+          reveal(winner, list);
         }
-      });
-
-      entriesEl.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE || node.nodeType === Node.ELEMENT_NODE) {
-          const text = node.textContent.trim();
-          if (duplicates.has(text)) {
-            node.classList.add("duplicate");
-          } else {
-            node.classList.remove("duplicate");
-          }
-        }
-      });
+      })();
     }
+
+    function reveal(winner, list) {
+      rollBox.classList.add('hide');
+      resultBox.textContent = winner;
+      resultBox.style.display = 'flex';
+      setState('revealing');
+      state.log.push({ name: winner, at: Date.now() });
+      if ($('removeWinner').checked) {
+        var removed = false;
+        input.value = list.filter(function (n) {
+          if (!removed && n === winner) { removed = true; return false; }
+          return true;
+        }).join('\n');
+      }
+      save(); updateCounts(); renderLog();
+      if (window.confetti) { window.confetti.start(); setTimeout(function () { window.confetti.stop(); }, 3000); }
+      spinning = false;
+      spinBtn.disabled = false;
+      spinBtn.classList.remove('spinning');
+      spinLabel.textContent = 'สุ่มต่อ';
+    }
+
+    function checkDuplicates(remove) {
+      var seen = new Set(), dups = new Set();
+      names().forEach(function (n) { if (seen.has(n)) dups.add(n); else seen.add(n); });
+      var out = $('dupResult');
+      out.replaceChildren();
+      if (remove) {
+        input.value = Array.from(seen).join('\n');
+        save(); updateCounts();
+        $('dedupeBtn').hidden = true;
+        GamePWA.toast('ลบชื่อซ้ำเรียบร้อย', { type: 'success' });
+        return;
+      }
+      $('dedupeBtn').hidden = dups.size === 0;
+      if (!dups.size) {
+        GamePWA.toast('ไม่พบชื่อซ้ำ', { type: 'success' });
+        return;
+      }
+      var p = document.createElement('p');
+      p.className = 'small mb-2 text-danger';
+      p.textContent = 'พบชื่อซ้ำ ' + dups.size + ' ชื่อ:';
+      var wrap = document.createElement('div'); wrap.className = 'dup-list';
+      dups.forEach(function (d) { var b = document.createElement('span'); b.className = 'entry-badge'; b.textContent = d; wrap.appendChild(b); });
+      out.append(p, wrap);
+    }
+
+    load(); applyTheme(); updateCounts(); renderLog();
+    input.addEventListener('input', function () { updateCounts(); save(); $('dupResult').replaceChildren(); $('dedupeBtn').hidden = true; });
+    spinBtn.addEventListener('click', spin);
+    $('dupBtn').addEventListener('click', function () { checkDuplicates(false); });
+    $('dedupeBtn').addEventListener('click', function () { checkDuplicates(true); });
+    $('themeBtn').addEventListener('click', function () { state.theme = state.theme === 'light' ? 'dark' : 'light'; applyTheme(); save(); });
+    $('clearLogBtn').addEventListener('click', function () {
+      if (!state.log.length) return;
+      Swal.fire({ title: 'ล้างประวัติผู้โชคดี?', text: 'รายการผู้โชคดีทั้งหมดในเครื่องนี้จะถูกลบ', icon: 'warning',
+        showCancelButton: true, confirmButtonText: 'ล้างเลย', cancelButtonText: 'ยกเลิก' })
+        .then(function (r) { if (r.isConfirmed) { state.log = []; save(); renderLog(); setState('idle'); resultBox.style.display = 'none'; } });
+    });
+  })();
   </script>
 </body>
 </html>

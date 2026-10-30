@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ไม่มีการเชื่อมต่อ | Yuwa Raffle</title>
+  <meta name="theme-color" content="#2B1166" />
+  <link rel="icon" type="image/svg+xml" href="./assets/medias/icons/icon.svg" />
+  <link rel="stylesheet" href="./assets/css/fonts.css" />
+  <link rel="stylesheet" href="./assets/css/fa_pro_67.css" />
+  <link rel="stylesheet" href="./css/cartoon-game.css" />
+</head>
+<body class="raffle-app" data-theme="dark">
+  <div class="game-bg" aria-hidden="true">
+    <span class="bg-toy is-star" style="--size:46px;--fill:#FFC93C;left:8%;top:16%"></span>
+    <span class="bg-toy is-coin" style="--size:34px;--fill:#2ED69A;left:86%;top:22%;--delay:-3s"></span>
+  </div>
+
+  <main class="launcher" style="flex:1; justify-content:center;">
+    <section class="game-panel offline-card" aria-labelledby="hOff">
+      <header class="panel-head is-cherry">
+        <h1 id="hOff" style="font-size:1.3rem; display:flex; align-items:center; gap:8px;">
+          <span class="panel-head-icon" aria-hidden="true"><i class="fa-solid fa-wifi-slash"></i></span>อุ๊ปส์! ไม่มีการเชื่อมต่อ
+        </h1>
+      </header>
+      <div class="panel-body">
+        <div class="offline-art" aria-hidden="true">
+          <div class="cloud"></div>
+          <div class="bolt"><i class="fa-solid fa-bolt"></i></div>
+        </div>
+        <p>หน้านี้ต้องใช้อินเทอร์เน็ตเพื่อซิงก์ผลการสุ่มกับจอหลัก<br>ระหว่างรอ ลองเล่น <strong>โหมดออฟไลน์</strong> ได้เลย</p>
+        <div class="menu-actions mt-4">
+          <button type="button" class="btn-game is-gold is-lg is-block" onclick="location.reload()">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>ลองใหม่อีกครั้ง
+          </button>
+          <a class="btn-game is-mint is-block" href="./offline/">
+            <i class="fa-solid fa-cloud-slash" aria-hidden="true"></i>เล่นโหมดออฟไลน์
+          </a>
+          <a class="btn-game is-plain is-block" href="./start.html">
+            <i class="fa-solid fa-house" aria-hidden="true"></i>กลับหน้าแรก
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Auto-retry once the connection returns
+    window.addEventListener('online', function () { location.reload(); });
+  </script>
+</body>
+</html>

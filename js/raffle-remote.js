@@ -135,7 +135,8 @@
       state.winnersTotal = data.total;
       renderWinners(data.logs, data.total);
       if (data.logs.length > 0) {
-        $('lastWinner').textContent = data.logs[data.logs.length - 1].winner_name;
+        // get_winners.php returns newest first
+        $('lastWinner').textContent = data.logs[0].winner_name;
       }
     } catch (e) { console.warn('loadWinners:', e); }
   }
@@ -376,6 +377,7 @@
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     document.querySelector(`[onclick="showTab('${tab}')"]`)?.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.setAttribute('aria-selected', btn.classList.contains('active') ? 'true' : 'false'));
     $('entriesTab')?.classList.toggle('active', tab === 'entries');
     $('winnersTab')?.classList.toggle('active', tab === 'winners');
     if (tab === 'entries') loadEntries();

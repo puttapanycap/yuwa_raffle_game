@@ -14,8 +14,8 @@ const confetti = (function () {
 
     // Confetti colors
     const colors = [
-        '#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#9b59b6',
-        '#ff8c42', '#00d2d3', '#ff6b81', '#54a0ff', '#5f27cd'
+        '#FFC93C', '#FF5DA2', '#2ED69A', '#38BDF8', '#7C3AED',
+        '#FF8A3D', '#A78BFA', '#FFFFFF', '#E11D48', '#FFE58A'
     ];
 
     // Resize canvas

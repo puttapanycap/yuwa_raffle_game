@@ -49,7 +49,7 @@
         $('prizeSection').style.display = 'block';
         const select = $('prizeSelect');
         const cur = select.value;
-        select.innerHTML = '<option value="">🎯 ไม่ระบุประเภท</option>';
+        select.innerHTML = '<option value="">ไม่ระบุประเภทรางวัล</option>';
         state.prizeCategories.forEach(p => {
           const remaining = p.quantity - p.winners_count;
           const disabled = remaining <= 0 ? 'disabled' : '';

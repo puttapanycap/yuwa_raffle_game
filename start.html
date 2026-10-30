@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Yuwa Raffle — เกมจับฉลากสุ่มชื่อ</title>
+  <meta name="description" content="เกมจับฉลากสุ่มชื่อสไตล์การ์ตูน | โรงพยาบาลยุวประสาทไวทโยปถัมภ์" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <meta name="theme-color" content="#2B1166" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Yuwa Raffle" />
+  <link rel="icon" type="image/svg+xml" href="./assets/medias/icons/icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/medias/icons/icon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/medias/icons/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Mitr:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="./assets/css/fonts.css" />
+  <link rel="stylesheet" href="./assets/css/fa_pro_67.css" />
+  <link rel="stylesheet" href="./css/cartoon-game.css" />
+</head>
+<body class="raffle-app" data-theme="dark">
+  <div class="game-bg" aria-hidden="true">
+    <span class="bg-toy is-star" style="--size:54px;--fill:#FFC93C;left:6%;top:18%;--dur:8s"></span>
+    <span class="bg-toy is-coin" style="--size:38px;--fill:#2ED69A;left:88%;top:14%;--dur:10s;--delay:-3s"></span>
+    <span class="bg-toy is-gem" style="--size:30px;--fill:#FF5DA2;left:78%;top:78%;--dur:9s;--delay:-5s"></span>
+    <span class="bg-toy is-star" style="--size:40px;--fill:#38BDF8;left:12%;top:82%;--dur:11s;--delay:-2s"></span>
+  </div>
+
+  <main class="launcher">
+    <header class="launcher-hero">
+      <img class="launcher-logo" src="./assets/medias/icons/icon-512.png" alt="" width="150" height="150" />
+      <h1 class="launcher-title">Yuwa Raffle</h1>
+      <p class="launcher-sub">เกมจับฉลากสุ่มชื่อ · โรงพยาบาลยุวประสาทไวทโยปถัมภ์</p>
+    </header>
+
+    <div class="launcher-grid">
+      <!-- Play -->
+      <section class="game-panel" aria-labelledby="hPlay">
+        <header class="panel-head is-sun">
+          <h2 id="hPlay"><span class="panel-head-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>เริ่มเล่น</h2>
+        </header>
+        <div class="panel-body menu-actions">
+          <a class="btn-game is-gold is-xl is-block" href="./index.php" data-online-only>
+            <i class="fa-solid fa-sparkles" aria-hidden="true"></i>เริ่มเกมใหม่
+          </a>
+          <a class="btn-game is-lg is-block" href="./settings.php" data-online-only>
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>ตั้งค่าก่อนเริ่ม
+          </a>
+          <a class="btn-game is-mint is-lg is-block" href="./offline/">
+            <i class="fa-solid fa-cloud-slash" aria-hidden="true"></i>โหมดออฟไลน์
+          </a>
+          <p class="menu-hint mb-0" id="onlineHint">เกมใหม่จะสร้างห้องและลิงก์แชร์ให้อัตโนมัติ · โหมดออฟไลน์สุ่มได้โดยไม่ต้องใช้อินเทอร์เน็ต</p>
+          <button type="button" class="btn-game is-sky is-block" data-pwa-install hidden>
+            <i class="fa-solid fa-download" aria-hidden="true"></i>ติดตั้งเป็นแอป
+          </button>
+        </div>
+      </section>
+
+      <!-- Continue -->
+      <section class="game-panel" aria-labelledby="hRecent">
+        <header class="panel-head is-sky">
+          <h2 id="hRecent"><span class="panel-head-icon" aria-hidden="true"><i class="fa-solid fa-clock-rotate-left"></i></span>เล่นต่อ</h2>
+        </header>
+        <div class="panel-body">
+          <ul class="recent-list" id="recentList"></ul>
+          <div class="empty-state" id="recentEmpty" hidden>
+            <i class="fa-solid fa-ticket" aria-hidden="true"></i>
+            <span>ยังไม่มีเกมล่าสุดบนอุปกรณ์นี้<br>กด "เริ่มเกมใหม่" เพื่อสร้างห้องแรก</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="game-footer"><span>Create By Yuwa IT</span></footer>
+  <div class="net-badge" role="status" aria-live="polite"><i class="fa-solid fa-wifi-slash" aria-hidden="true"></i> ออฟไลน์</div>
+
+  <script src="./js/pwa.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var list = document.getElementById('recentList');
+      var empty = document.getElementById('recentEmpty');
+      var fmt = new Intl.DateTimeFormat('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+      var PAGES = [
+        ['index.php', 'fa-tv', 'จอหลัก', 'is-gold'],
+        ['remote.php', 'fa-gamepad-modern', 'รีโมต', 'is-sky'],
+        ['button.php', 'fa-hand-pointer', 'ปุ่ม VIP', 'is-bubble'],
+        ['settings.php', 'fa-gear', 'ตั้งค่า', 'is-plain']
+      ];
+
+      function render() {
+        var games = (window.GamePWA ? GamePWA.getRecent() : []);
+        list.replaceChildren();
+        empty.hidden = games.length > 0;
+        games.forEach(function (g) {
+          var li = document.createElement('li');
+          li.className = 'recent-item';
+          var head = document.createElement('div');
+          head.className = 'recent-item-head';
+          var t = document.createElement('span');
+          t.className = 'recent-item-title';
+          t.textContent = g.title || 'Raffle Game';
+          var time = document.createElement('span');
+          time.className = 'recent-item-time';
+          time.textContent = g.at ? fmt.format(new Date(g.at)) : '';
+          head.append(t, time);
+
+          var actions = document.createElement('div');
+          actions.className = 'recent-item-actions';
+          PAGES.forEach(function (p) {
+            var a = document.createElement('a');
+            a.className = 'btn-game is-sm ' + p[3];
+            a.href = './' + p[0] + '?share=' + encodeURIComponent(g.key);
+            a.setAttribute('aria-label', p[2] + ' — ' + (g.title || 'Raffle Game'));
+            a.innerHTML = '<i class="fa-solid ' + p[1] + '" aria-hidden="true"></i>';
+            a.appendChild(document.createTextNode(p[2]));
+            actions.appendChild(a);
+          });
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.className = 'btn-game is-cherry is-sm btn-icon';
+          rm.setAttribute('aria-label', 'ลบ "' + (g.title || 'Raffle Game') + '" ออกจากรายการล่าสุด');
+          rm.title = 'ลบออกจากรายการ (ไม่ลบข้อมูลเกม)';
+          rm.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+          rm.addEventListener('click', function () { GamePWA.removeRecent(g.key); render(); });
+          actions.appendChild(rm);
+
+          li.append(head, actions);
+          list.appendChild(li);
+        });
+      }
+
+      function syncOnline() {
+        var off = !navigator.onLine;
+        document.querySelectorAll('[data-online-only]').forEach(function (a) {
+          a.setAttribute('aria-disabled', off ? 'true' : 'false');
+          if (off) a.setAttribute('tabindex', '-1'); else a.removeAttribute('tabindex');
+        });
+        document.getElementById('onlineHint').textContent = off
+          ? 'ตอนนี้ออฟไลน์อยู่ — เล่นได้ในโหมดออฟไลน์ หรือเปิดเกมล่าสุดที่เคยโหลดไว้'
+          : 'เกมใหม่จะสร้างห้องและลิงก์แชร์ให้อัตโนมัติ · โหมดออฟไลน์สุ่มได้โดยไม่ต้องใช้อินเทอร์เน็ต';
+      }
+
+      render();
+      syncOnline();
+      window.addEventListener('online', syncOnline);
+      window.addEventListener('offline', syncOnline);
+    });
+  </script>
+</body>
+</html>

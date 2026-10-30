@@ -67,6 +67,9 @@
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
+    // Fill the mobile bottom sheets right away (previously empty until first change)
+    if (dom.entriesListMobile) renderEntries(dom.entriesListMobile, state.entries);
+    if (dom.winnersListMobile && dom.winnersList) dom.winnersListMobile.innerHTML = dom.winnersList.innerHTML;
     loadSettings();
     poller.start();
   }
@@ -90,7 +93,7 @@
 
   function applySettings() {
     const s = state.settings;
-    document.body.setAttribute('data-theme', s.theme || 'aurora');
+    document.body.setAttribute('data-theme', s.theme === 'light' ? 'light' : 'dark');
     const root = document.documentElement.style;
     root.setProperty('--result-font-size', (s.result_font_size || 72) + 'px');
     root.setProperty('--result-font-color', s.result_font_color || 'var(--text-primary)');
@@ -152,6 +155,7 @@
   }
 
   function onStateChange(s) {
+    document.body.dataset.gameState = s.action;
     const isWheel = state.settings.animation_template === 'wheel';
     const btn = dom.spinBtn;
     const wheelBtn = dom.wheelSpinBtn;
@@ -439,7 +443,12 @@
   // ===========================================================================
   // WHEEL (canvas)
   // ===========================================================================
-  const WHEEL_COLORS = ['#00d9ff', '#ffae00', '#00ffa3', '#b16cea', '#67e8f9', '#ff5e9c'];
+  // Cartoon candy palette: [fill, text]
+  const WHEEL_COLORS = [
+    ['#7C3AED', '#FFFFFF'], ['#FFC93C', '#1E1240'], ['#FF5DA2', '#1E1240'],
+    ['#2ED69A', '#1E1240'], ['#38BDF8', '#1E1240'], ['#FF8A3D', '#1E1240'],
+  ];
+  const WHEEL_INK = '#1E1240';
   let wheelCtx = null, wheelRotation = 0, wheelSpinning = false, wheelAnimId = null;
 
   function initWheel() {
@@ -453,7 +462,7 @@
     const c = dom.wheel;
     const ctx = wheelCtx;
     const cx = c.width / 2, cy = c.height / 2;
-    const r = Math.min(cx, cy) - 10;
+    const r = Math.min(cx, cy) - 4;
     ctx.clearRect(0, 0, c.width, c.height);
     const n = Math.min(state.entries.length, 8);
     const seg = (2 * Math.PI) / n;
@@ -467,15 +476,27 @@
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, r, a0, a1);
       ctx.closePath();
-      ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
+      const [fill, ink] = WHEEL_COLORS[i % WHEEL_COLORS.length];
+      ctx.fillStyle = fill;
       ctx.fill();
-      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-      ctx.lineWidth = 2;
+      // glossy inner band
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.93, a0, a1);
+      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+      ctx.lineWidth = r * 0.05;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, r, a0, a1);
+      ctx.closePath();
+      ctx.strokeStyle = WHEEL_INK;
+      ctx.lineWidth = 6;
+      ctx.lineJoin = 'round';
       ctx.stroke();
       ctx.save();
       ctx.rotate(a0 + seg / 2 + Math.PI / 2);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 14px LINESeedSansTH, sans-serif';
+      ctx.fillStyle = ink;
+      ctx.font = `600 ${Math.round(r * 0.085)}px Mitr, LINESeedSansTH, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       const e = state.entries[i % state.entries.length];
@@ -486,9 +507,10 @@
     }
     ctx.restore();
     ctx.beginPath();
-    ctx.arc(cx, cy, 55, 0, 2 * Math.PI);
-    ctx.fillStyle = '#1e1e1e';
-    ctx.fill();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = WHEEL_INK;
+    ctx.lineWidth = 8;
+    ctx.stroke();
   }
 
   function startWheelSpin() {
